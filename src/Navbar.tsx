@@ -1,14 +1,14 @@
 import {NavLink} from "react-router-dom";
 import {useState} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { cartCountSelector, onShowCart } from "./stores";
 import NS from './O/NS.png'
 import cartIcon from './O/Cart.png'
 
-export const Navbar = (props: any) => {
+export const Navbar = () => {
+  const dispatch = useDispatch();
   const [navbarOpen, setNavbarOpen] = useState(false);
-  const cartCount: number = props.cart.reduce(
-    (total: number, product: any) => total + product.quantity,
-    0
-  );
+  const cartCount = useSelector(cartCountSelector)
 
   const navLink = `px-3 py-2 flex items-center text-lg text-white uppercase font-bold leading-snug hover:opacity-75`
   const navLinkDrop = `text-white flex w-full px-4 py-2 text-md font-bold leading-5 text-right`
@@ -79,7 +79,7 @@ export const Navbar = (props: any) => {
               </div>
             </div>
 
-            <li onClick={props.onOpenCart} className="cursor-pointer" >
+            <li onClick={() => dispatch(onShowCart())} className="cursor-pointer" >
               <a className={navLink}>
                 <img src={cartIcon} className="w-[30px] h-[24px]" />
                 ({cartCount})

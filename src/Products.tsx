@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {useFetch} from "./useFetch";
 import {Loader} from "./Loader";
 import {Product} from "./Product";
@@ -26,7 +26,7 @@ export const Products = (props: any) => {
   const { get, loading } = useFetch(
     "https://nco-store-default-rtdb.europe-west1.firebasedatabase.app/NC-Store/"
   );
-  
+
   const sortIconRotate = sortNames || sortPrice ? "rotate-180" : "rotate-0"
 
   let savedProducts: any = []
@@ -119,21 +119,6 @@ export const Products = (props: any) => {
   useEffect(() => {
     document.documentElement.scrollTo(0, 0);
   }, [productPage, pathname])
-
-// přesunout do jednoho effectu
-//  useEffect(() => {
-//    productData.forEach(product => {
-//      if (product.type === typeSortOut) {
-//        savedRenders.push("r")
-//        savedProducts.push(product)
-//      }
-//    })
-//    setProducts(savedProducts)
-//  }, [typeSortOut])
-
-//  const handleSearchItem= (e) => {
-//    setSearchItem(e.target.value)
-//  }
 
   const handleTypeFilter = (e: any) => {
     if (e.currentTarget.id === "") {
@@ -235,10 +220,6 @@ export const Products = (props: any) => {
                 type={props.type}
                 key={product.id}
                 details={product}
-                cart={props.cart}
-                onProductAdd={props.onProductAdd}
-                onProductRemove={props.onProductRemove}
-                onProductDelete={props.onProductDelete}
               ></Product>
             );
           }

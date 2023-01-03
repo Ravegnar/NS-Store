@@ -1,18 +1,31 @@
 import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { cartValueSelector, addProduct, removeProduct, deleteProduct, showCart, onShowCart } from "./stores";
 
-export const Cart = (props: any) => {
-  const {cart, open, onOpenCart, onProductDelete} = props
-  const totalPrice: number = cart.reduce(
-    (total: number, product: any) => total + product.price * product.quantity,
-    0
-  );
+export const Cart = () => {
+  const dispatch = useDispatch();
+  const totalPrice = useSelector(cartValueSelector)
+  const openCart = useSelector(showCart);
+  const cart = useSelector((state: any) => state.cart);
+
+  const onProductAdd = (product: any) => {
+    dispatch(addProduct(product));
+  };
+
+  const onProductRemove = (id: number) => {
+    dispatch(removeProduct(id));
+  };
+
+  const onProductDelete = (id: number) => {
+    dispatch(deleteProduct(id));
+  };
 
   return (
-    <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={onOpenCart}>
+    <Transition.Root show={openCart} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={() => dispatch(onShowCart())}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -46,7 +59,7 @@ export const Cart = (props: any) => {
                           <button
                             type="button"
                             className="-m-2 p-2 text-white hover:text-orange-500"
-                            onClick={onOpenCart}
+                            onClick={() => dispatch(onShowCart())}
                           >
                             <span className="sr-only">Close panel</span>
                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -90,13 +103,13 @@ export const Cart = (props: any) => {
                                     <div className="flex flex-1 items-end justify-between text-sm">
                                       <div className='flex align-middle'>
                                         <p className="text-gray-300 pr-2">Qty</p>
-                                        <button className="text-cyan-700 pr-1 hover:text-cyan-500 font-medium  my-auto" onClick={() => props.onProductRemove(product)}>
+                                        <button className="text-cyan-700 pr-1 hover:text-cyan-500 font-medium  my-auto" onClick={() => onProductDelete(product.id)}>
                                           <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
                                             <path fillRule="evenodd" d="M5.25 12a.75.75 0 01.75-.75h12a.75.75 0 010 1.5H6a.75.75 0 01-.75-.75z" clipRule="evenodd" />
                                           </svg>
                                         </button>
                                         <p className="text-gray-300 px-1">{product.quantity}</p>
-                                        <button className="text-cyan-700 hover:text-cyan-500 font-medium  my-auto" onClick={() => props.onProductAdd(product)}>
+                                        <button className="text-cyan-700 hover:text-cyan-500 font-medium  my-auto" onClick={() => onProductAdd(product)}>
                                           <svg fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                                           </svg>
@@ -106,7 +119,7 @@ export const Cart = (props: any) => {
                                       <button
                                         type="button"
                                         className="font-medium text-cyan-600 hover:text-cyan-500"
-                                        onClick={() => onProductDelete(product.id)}
+                                        onClick={() => onProductRemove(product.id)}
                                       >
                                         Remove
                                       </button>
@@ -130,7 +143,7 @@ export const Cart = (props: any) => {
                         <Link
                           to="/NS-Store/checkout"
                           className="flex items-center justify-center border border-transparent bg-cyan-900 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-cyan-700"
-                          onClick={onOpenCart}
+                          onClick={() => dispatch(onShowCart())}
                         >
                           Checkout
                         </Link>
@@ -142,7 +155,7 @@ export const Cart = (props: any) => {
                           <button
                             type="button"
                             className="font-medium text-cyan-600 hover:text-cyan-500"
-                            onClick={onOpenCart}
+                            onClick={() => dispatch(onShowCart())}
                           >
                             Continue Shopping
                             <span aria-hidden="true"> &rarr;</span>

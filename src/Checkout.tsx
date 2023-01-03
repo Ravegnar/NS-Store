@@ -1,7 +1,13 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { cartValueSelector } from "./stores";
+import { Link } from "react-router-dom";
 import {Footer} from "./Footer";
 
-export const Checkout = (props: any) => {
+export const Checkout = () => {
+    const totalPrice = useSelector(cartValueSelector)
+    const cart = useSelector((state: any) => state.cart);
+
     const [showModal, setShowModal] = useState(false);
     const [checkInfo, setCheckInfo] = useState("block");
     const [name, setName] = useState("");
@@ -13,11 +19,6 @@ export const Checkout = (props: any) => {
     const [country, setCountry] = useState("");
     const [card, setCard] = useState("");
     const [validation,setValidation] = useState("")
-    const {cart, onProductDelete} = props
-    const totalPrice: number = cart.reduce(
-        (total: number, product: any) => total + product.price * product.quantity,
-        0
-    );
     
     const handleCheckInfo = () => {
         setCheckInfo("hidden")
@@ -123,7 +124,7 @@ export const Checkout = (props: any) => {
                                             <option value="BR">Brazil</option>
                                             <option value="CA">Canada</option>
                                             <option value="CN">China</option>
-                                            <option value="CZ" selected={true}>Czech republic</option>
+                                            <option value="CZ">Czech republic</option>
                                             <option value="DK">Denmark</option>
                                             <option value="FI">Finland</option>
                                             <option value="FR">France</option>
@@ -178,7 +179,7 @@ export const Checkout = (props: any) => {
                             <img src={require("" + product.image)} alt="Product" className="rounded w-full bg-slate-900 h-20 px-1 object-contain object-center" />
                         </div>
                         <div className="flex flex-col col-span-2 pt-2">
-                            <a href={product.path} className="text-cyan-600 font-bold text-md font-semi-bold">{product.name}</a>
+                            <Link to={product.path} className="text-cyan-600 font-bold text-md font-semi-bold">{product.name}</Link>
                             <span className="text-gray-400 text-sm inline-block pt-2">{product.type}</span>
                         </div>
                         <div className="col-span-2 pt-3">

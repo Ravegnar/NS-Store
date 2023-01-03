@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import {NavLink, Routes, Route, useParams, useLocation} from "react-router-dom";
+import { NavLink, Routes, Route, useParams, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { addProduct, removeProduct, deleteProduct } from "./stores";
 import {ProductDetailInfo} from "./ProductDetailInfo";
 import {ProductDetailPreview} from "./ProductDetailPreview";
 import {ProductDetailStats} from "./ProductDetailStats";
@@ -8,6 +10,7 @@ import {Footer} from "./Footer";
 import {StoreNavigation} from "./StoreNavigation";
 
 export const ProductDetails = (props: any) => {
+  const dispatch = useDispatch();
   const [product, setProduct] = useState<any>({});
   const [selectedImage, setSelectedImage] = useState("");
   const [showImage, setShowImage] = useState(false);
@@ -32,11 +35,26 @@ export const ProductDetails = (props: any) => {
   
   const tabClasses = "flex-grow sm:w-1/3 text-white border-b-2 border-gray-300 py-2 text-lg px-1"
 
-  const productFromCart: any = props.cart.find(
-    (cartProduct: any) => cartProduct.id === product.id
+
+  const onProductAdd = (product: any) => {
+    dispatch(addProduct(product));
+  };
+
+  const onProductRemove = (id: number) => {
+    dispatch(removeProduct(id));
+  };
+
+  const onProductDelete = (id: number) => {
+    dispatch(deleteProduct(id));
+  };
+
+  const cart = useSelector((state: any) => state.cart);
+  const productFromCart = cart.find(
+    (item: any) => item.id === product.id
   );
   const quantity = productFromCart ? productFromCart.quantity : 0;
-    
+
+  
   return (<>
     <section className="text-white body-font overflow-hidden">
       <StoreNavigation />
@@ -84,13 +102,13 @@ export const ProductDetails = (props: any) => {
                 <div className="flex mt-8 mb-2 justify-between">
                   <p className="title-font font-medium text-white">In cart</p>
                   <div className="flex">
-                    <button className="text-cyan-700 hover:text-cyan-500 font-medium  my-auto" onClick={() => props.onProductRemove(product)}>
+                    <button className="text-cyan-700 hover:text-cyan-500 font-medium  my-auto" onClick={() => onProductDelete(product.id)}>
                       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                         <path fillRule="evenodd" d="M5.25 12a.75.75 0 01.75-.75h12a.75.75 0 010 1.5H6a.75.75 0 01-.75-.75z" clipRule="evenodd" />
                       </svg>
                     </button>
                     <p className="text-white px-2">{quantity}</p>
-                    <button className="text-cyan-700 hover:text-cyan-500 font-medium" onClick={() => props.onProductDelete(product.id)}>
+                    <button className="text-cyan-700 hover:text-cyan-500 font-medium" onClick={() => onProductRemove(product.id)}>
                       remove
                     </button>
                   </div>
@@ -99,7 +117,7 @@ export const ProductDetails = (props: any) => {
               <div className="flex items-baseline">
                 <span className="title-font font-medium text-2xl text-white">${product.price && product.price.toLocaleString()}</span>
                 <button className="flex ml-auto min-w-[8rem] mt-3 text-white border-4 py-2 px-4 sm:px-6 uppercase font-semibold hover:bg-white hover:bg-opacity-25 hover:scale-110 transform duration-300 ease-in-out"
-                  onClick={() => props.onProductAdd({...product, path: pathname})}>
+                  onClick={() => onProductAdd({...product, path: pathname})}>
                     Add to cart
                 </button>
               </div>

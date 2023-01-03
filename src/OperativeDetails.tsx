@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import {NavLink, Routes, Route, useParams, useLocation} from "react-router-dom";
+import { NavLink, Routes, Route, useParams, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { addProduct, removeProduct, deleteProduct } from "./stores";
 import {OperativeDetailInfo} from "./OperativeDetailInfo";
 import {OperativeDetailGear} from "./OperativeDetailGear";
 import {OperativeDetailWeapons} from "./OperativeDetailWeapons";
@@ -7,7 +9,8 @@ import {useFetch} from "./useFetch";
 import {Footer} from "./Footer";
 import {StoreNavigation} from "./StoreNavigation";
 
-export const OperativeDetails = (props: any) => {
+export const OperativeDetails = () => {
+  const dispatch = useDispatch();
   const [operative, setOperative] = useState<any>(false);
   const [selectedImage, setSelectedImage] = useState<any>("");
   const [showImage, setShowImage] = useState(false);
@@ -31,11 +34,25 @@ export const OperativeDetails = (props: any) => {
       }, [pathname]);
 
   const tabClasses = "flex-grow sm:w-1/3 text-white border-b-2 border-gray-300 py-2 text-lg px-1"
-  
-  const productFromCart: any = props.cart.find(
-    (cartProduct: any) => cartProduct.id === operative.id
+
+  const onProductAdd = (product: any) => {
+    dispatch(addProduct(product));
+  };
+
+  const onProductRemove = (id: number) => {
+    dispatch(removeProduct(id));
+  };
+
+  const onProductDelete = (id: number) => {
+    dispatch(deleteProduct(id));
+  };
+
+  const cart = useSelector((state: any) => state.cart);
+  const productFromCart = cart.find(
+    (item: any) => item.id === operative.id
   );
   const quantity = productFromCart ? productFromCart.quantity : 0;
+
 
   return (<>
     <section className="text-white body-font overflow-hidden">
@@ -84,13 +101,13 @@ export const OperativeDetails = (props: any) => {
                 <div className="flex mt-4 mb-2 items-baseline justify-between">
                   <p className="title-font font-medium text-white">In cart</p>
                   <div className="flex">
-                    <button className="text-cyan-700 hover:text-cyan-500 font-medium  my-auto" onClick={() => props.onProductRemove(operative)}>
+                    <button className="text-cyan-700 hover:text-cyan-500 font-medium  my-auto" onClick={() => onProductDelete(operative.id)}>
                       <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                         <path fillRule="evenodd" d="M5.25 12a.75.75 0 01.75-.75h12a.75.75 0 010 1.5H6a.75.75 0 01-.75-.75z" clipRule="evenodd" />
                       </svg>
                     </button>
                     <p className="text-white px-2 my-auto">{quantity}</p>
-                    <button className="text-cyan-700 hover:text-cyan-500 font-medium" onClick={() => props.onProductDelete(operative.id)}>
+                    <button className="text-cyan-700 hover:text-cyan-500 font-medium" onClick={() => onProductRemove(operative.id)}>
                       remove
                     </button>
                   </div>
@@ -99,7 +116,7 @@ export const OperativeDetails = (props: any) => {
               <div className="flex items-baseline">
                 <span className="title-font font-medium text-2xl text-white">${operative.price && operative.price.toLocaleString()}</span>
                 <button className="flex ml-auto min-w-[8rem] mt-3 text-white border-4 py-2 px-2 sm:px-6 uppercase font-semibold hover:bg-white hover:bg-opacity-25 hover:scale-110 transform duration-300 ease-in-out"
-                  onClick={() => props.onProductAdd({...operative, path: pathname})}>
+                  onClick={() => onProductAdd({...operative, path: pathname})}>
                     Add to cart
                 </button>
               </div>

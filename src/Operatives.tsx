@@ -14,7 +14,7 @@ interface Selected {
   specialization: string;
 }
 
-export const Operatives = (props:any) => {
+export const Operatives = () => {
   const [operatives, setOperatives] = useState([]);
   const [selected, setSelected] = useState<Selected>({
                                             image: "./O/About2.jpg",
@@ -70,9 +70,6 @@ export const Operatives = (props:any) => {
             <Operative
               key={operative.id}
               operative={operative}
-              cart={props.cart}
-              onProductAdd={props.onProductAdd}
-              onProductDelete={props.onProductDelete}
               onSelected={handleSelect}
             ></Operative>
           );
