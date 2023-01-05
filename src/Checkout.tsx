@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { cartValueSelector } from "./stores";
-import { Link } from "react-router-dom";
+import {useState, useEffect} from "react";
+import {useSelector} from "react-redux";
+import {cartValueSelector} from "./stores";
+import {Link} from "react-router-dom";
+import {ProductInterface, AppStateInterface} from './type.d';
 import {Footer} from "./Footer";
 
 export const Checkout = () => {
     const totalPrice = useSelector(cartValueSelector)
-    const cart = useSelector((state: any) => state.cart);
+    const cart = useSelector((state: AppStateInterface) => state.cart);
 
     const [showModal, setShowModal] = useState(false);
     const [checkInfo, setCheckInfo] = useState("block");
@@ -24,7 +25,7 @@ export const Checkout = () => {
         setCheckInfo("hidden")
     }
 
-    const handleOnSubmit = (e: any) => {
+    const handleOnSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
         if (!name) {
@@ -172,14 +173,14 @@ export const Checkout = () => {
             {cart.length === 0 && (
               <p className='text-white px-8 pt-2'>You have not added any product to your cart yet.</p>
             )}
-            <ul role="list" className="py-6 border-b border-slate-700 space-y-6 px-8 overscroll-contain">
-                {cart.map((product: any) => (
+            <ul className="py-6 border-b border-slate-700 space-y-6 px-8 overscroll-contain">
+                {cart.map((product: ProductInterface) => (
                     <li key={product.name} className="grid grid-cols-6 gap-2 border-b-1">
                         <div className="col-span-2 mr-2 self-center">
                             <img src={require("" + product.image)} alt="Product" className="rounded w-full bg-slate-900 h-20 px-1 object-contain object-center" />
                         </div>
                         <div className="flex flex-col col-span-2 pt-2">
-                            <Link to={product.path} className="text-cyan-600 font-bold text-md font-semi-bold">{product.name}</Link>
+                            <Link to={(product.path || "")} className="text-cyan-600 font-bold text-md font-semi-bold">{product.name}</Link>
                             <span className="text-gray-400 text-sm inline-block pt-2">{product.type}</span>
                         </div>
                         <div className="col-span-2 pt-3">

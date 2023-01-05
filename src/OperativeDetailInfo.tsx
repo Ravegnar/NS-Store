@@ -1,5 +1,6 @@
-export const OperativeDetailInfo = (props: any) => {
-  const {operative} = props;
+import {ProductInterface} from './type.d';
+
+export const OperativeDetailInfo = ({operative}: { operative: ProductInterface }) => {
   return (<>
     <p className="leading-relaxed text-justify mb-4">
       {operative.info}

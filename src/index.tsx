@@ -1,8 +1,8 @@
 import './index.css';
 import ReactDOM from "react-dom/client";
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { Provider } from "react-redux";
-import { store } from "./stores";
+import {Routes, Route, BrowserRouter} from 'react-router-dom';
+import {Provider} from "react-redux";
+import {store} from "./stores";
 import {About} from "./About";
 import {Cart} from "./Cart";
 import {Checkout} from "./Checkout";

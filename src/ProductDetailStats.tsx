@@ -1,5 +1,5 @@
-export const ProductDetailStats = (props: any) => {
-  const {product} = props;
+export const ProductDetailStats = () => {
+
   return (
     <>
       <h2 className="mb-8">

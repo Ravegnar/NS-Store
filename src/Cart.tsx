@@ -1,17 +1,18 @@
-import { Fragment } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { cartValueSelector, addProduct, removeProduct, deleteProduct, showCart, onShowCart } from "./stores";
+import {Fragment} from 'react'
+import {Dialog, Transition} from '@headlessui/react'
+import {XMarkIcon} from '@heroicons/react/24/outline'
+import {Link} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {cartValueSelector, addProduct, removeProduct, deleteProduct, showCart, onShowCart} from "./stores";
+import {ProductInterface, AppStateInterface} from './type.d';
 
 export const Cart = () => {
   const dispatch = useDispatch();
   const totalPrice = useSelector(cartValueSelector)
   const openCart = useSelector(showCart);
-  const cart = useSelector((state: any) => state.cart);
+  const cart = useSelector((state: AppStateInterface) => state.cart);
 
-  const onProductAdd = (product: any) => {
+  const onProductAdd = (product: ProductInterface) => {
     dispatch(addProduct(product));
   };
 
@@ -72,8 +73,8 @@ export const Cart = () => {
                           {cart.length === 0 && (
                             <p className='text-white'>You have not added any product to your cart yet.</p>
                           )}
-                          <ul role="list" className="-my-6 divide-y divide-slate-600">
-                            {cart.map((product: any) => (
+                          <ul className="-my-6 divide-y divide-slate-600">
+                            {cart.map((product: ProductInterface) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 scrollbar-hide overflow-hidden rounded-md border border-slate-700">
                                   <img
@@ -87,7 +88,7 @@ export const Cart = () => {
                                   <div>
                                     <div className="flex justify-between text-base font-medium text-cyan-600">
                                       <h3 className='font-bold'>
-                                        <Link to={product.path}>{product.name}</Link>
+                                        <Link to={(product.path || "")}>{product.name}</Link>
                                       </h3>
                                       <p className="ml-4 text-white">${product.price.toLocaleString()}</p>
                                     </div>
@@ -97,7 +98,7 @@ export const Cart = () => {
                                     </div>
                                     <div className="flex justify-between text-base font-medium text-white">
                                       <p className=""></p>
-                                      <p className="">${(product.price * product.quantity).toLocaleString()}</p>
+                                      <p className="">${(product.price * (product.quantity || 0)).toLocaleString()}</p>
                                     </div>
                                     </div>
                                     <div className="flex flex-1 items-end justify-between text-sm">

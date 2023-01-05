@@ -1,12 +1,17 @@
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { addProduct, removeProduct, deleteProduct } from "./stores";
+import {Link} from "react-router-dom";
+import {useSelector, useDispatch} from "react-redux";
+import {addProduct, removeProduct, deleteProduct} from "./stores";
+import {ProductInterface, AppStateInterface} from './type.d';
 
-export const Product = (props: any) => {
+interface Props {
+  type: string
+  details: ProductInterface
+}
+
+export const Product = ({type, details}: Props) => {
   const dispatch = useDispatch();
-  const {type, details} = props;
     
-  const onProductAdd = (product: any) => {
+  const onProductAdd = (product: ProductInterface) => {
     dispatch(addProduct(product));
   };
 
@@ -18,9 +23,9 @@ export const Product = (props: any) => {
     dispatch(deleteProduct(id));
   };
 
-  const cart = useSelector((state: any) => state.cart);
+  const cart = useSelector((state: AppStateInterface) => state.cart);
   const productFromCart = cart.find(
-    (item: any) => item.id === details.id
+    (item) => item.id === details.id
   );
   const quantity = productFromCart ? productFromCart.quantity : 0;
 

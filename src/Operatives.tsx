@@ -1,33 +1,24 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {useFetch} from "./useFetch";
 import {Loader} from "./Loader";
 import {Operative} from "./Operative";
 import {StoreNavigation} from "./StoreNavigation";
 import {Footer} from "./Footer";
-
-interface Selected {
-  id?: number;
-  image: string;
-  name: string;
-  classNames: string;
-  specialization: string;
-}
+import {ProductInterface, SelectedInterface} from './type.d';
 
 export const Operatives = () => {
-  const [operatives, setOperatives] = useState([]);
-  const [selected, setSelected] = useState<Selected>({
-                                            image: "./O/About2.jpg",
-                                            name: "Nanite Systems Operatives",
-                                            classNames: "max-w-[75rem]",
-                                            specialization: ""
-                                          });
+  const [operatives, setOperatives] = useState<ProductInterface[]>([]);
+  const [selected, setSelected] = useState<SelectedInterface>({
+    image: "./O/About2.jpg",
+    name: "Nanite Systems Operatives",
+    classNames: "max-w-[75rem]",
+    specialization: ""
+  });
   const { get, loading } = useFetch(
     "https://nco-store-default-rtdb.europe-west1.firebasedatabase.app/NC-Store/"
   );
 
-  let saver: any = []
-  
   useEffect(() => {
     document.documentElement.scrollTo(0, 0);
   }, [])
@@ -35,13 +26,13 @@ export const Operatives = () => {
   useEffect(() => {
     get("NCO.json").then((data: any ) => {
       Object.keys(data).forEach(prod => {
-        saver.push(data[prod] as unknown)
+        operatives.push(data[prod])
       });
-      setOperatives(saver);
+      setOperatives(operatives);
     }).catch((error) => console.log("Could not load operatives", error));
   }, []);
 
-  const handleSelect = (selectedOperative: any) => {
+  const handleSelect = (selectedOperative: SelectedInterface) => {
     setSelected(selectedOperative)
   }
 
@@ -65,7 +56,7 @@ export const Operatives = () => {
       </div>
       <div className="flex max-w-3xl mx-auto justify-evenly bg-slate-800 border-4">
         {loading && <Loader />}
-        {operatives.map((operative: any) => {
+        {operatives.map((operative: ProductInterface) => {
           return (
             <Operative
               key={operative.id}

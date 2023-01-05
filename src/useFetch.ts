@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-export const useFetch = (baseUrl: any) => {
+export const useFetch = (baseUrl: string) => {
   const [loading, setLoading] = useState(true);
 
-  function get(url: any) {
+  function get(url: string) {
     return new Promise((resolve, reject) => {
       fetch(baseUrl + url)
         .then(response => response.json())
@@ -22,7 +22,7 @@ export const useFetch = (baseUrl: any) => {
     });
   }
 
-  function post(url:any, body: any) {
+  function post(url: string, body: string) {
     return new Promise((resolve, reject) => {
       fetch(baseUrl + url, {
         method: "post",

@@ -1,7 +1,7 @@
 import {NavLink} from "react-router-dom";
 import {useState} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { cartCountSelector, onShowCart } from "./stores";
+import {useDispatch, useSelector} from "react-redux";
+import {cartCountSelector, onShowCart} from "./stores";
 import NS from './O/NS.png'
 import cartIcon from './O/Cart.png'
 
@@ -80,10 +80,10 @@ export const Navbar = () => {
             </div>
 
             <li onClick={() => dispatch(onShowCart())} className="cursor-pointer" >
-              <a className={navLink}>
+              <div className={navLink}>
                 <img src={cartIcon} className="w-[30px] h-[24px]" />
                 ({cartCount})
-              </a>
+              </div>
             </li>
           </ul>
         </div>

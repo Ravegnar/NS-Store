@@ -1,6 +1,6 @@
 import pattern from './O/pattern2.png'
 
-export const OperativeDetailWeapons = (props: any) => {
+export const OperativeDetailWeapons = () => {
     return (<>
     <div className='relative h-full overflow-hidden'>
       <h1 className="text-white text-5xl">It is being worked on</h1>

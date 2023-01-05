@@ -1,4 +1,5 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { ProductInterface, AppStateInterface } from './type.d';
 
 const getSavedCart = () => {
     let savedCart = [];
@@ -10,34 +11,24 @@ const getSavedCart = () => {
     return savedCart;
 };
 
-const saveCart = (cart: any) => {
+const saveCart = (cart: ProductInterface[]) => {
     localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-const initialState = {
+const initialState: AppStateInterface = {
     cart: getSavedCart(),
     showCart: false,
-    pdd: [{asd: 1,
-            asds: "asd"}]
 };
 
-interface Product {
-    name: string,
-    id: number,
-    price: number,
-    quantity: number
-}
-
-
-const cartSlice: any = createSlice({
+const cartSlice = createSlice({
     name: "cart",
     initialState,
     reducers: {
-        addProduct: (state: any, action) => {
-            const existingProduct: any = state.cart.find(
-                (product: Product) => product.id === action.payload.id
+        addProduct: (state, action) => {
+            const existingProduct: ProductInterface | undefined = state.cart.find(
+                (product: ProductInterface) => product.id === action.payload.id
                 );
-            if (existingProduct) {
+            if (existingProduct?.quantity) {
                 // immer makes this immutable
                 existingProduct.quantity++;
             } else {
@@ -46,35 +37,29 @@ const cartSlice: any = createSlice({
             }
             saveCart(state.cart)
             //console.log("Aktuální stav košíku:", JSON.stringify(state.cart, null, 1));
-            
         },
         removeProduct: (state, action) => {
-            const index = state.cart.findIndex(
-                (product: Product) => product.id === action.payload
+            const index: number = state.cart.findIndex(
+                (product: ProductInterface) => product.id === action.payload
             );
             // immer makes this immutable
             saveCart(state.cart.splice(index, 1))
         },
         deleteProduct: (state, action) => {
-            const existingProduct: any = state.cart.find(
-                (product: Product) => product.id === action.payload
+            const existingProduct: ProductInterface | undefined = state.cart.find(
+                (product: ProductInterface) => product.id === action.payload.id
                 );
-            if (existingProduct.quantity === 1) {
+            if (existingProduct?.quantity === 1) {
                 const index = state.cart.findIndex(
-                    (product: Product) => product.id === action.payload
+                    (product: ProductInterface) => product.id === action.payload
                 );
                 state.cart.splice(index, 1)
-            } else {
+            } else if (existingProduct?.quantity) {
                 existingProduct.quantity--;
             }
             saveCart(state.cart)
         },
-        prdlajs: (state: any, action) => {
-            console.log(action.payload)
-            console.log(state + "state")
-            state.showCart = !state.showCart
-        },
-        onShowCart: (state: any) => {
+        onShowCart: (state) => {
             state.showCart = !state.showCart
         }
     },
@@ -84,19 +69,18 @@ const store = configureStore({
     reducer: cartSlice.reducer,
 });
 
-const { addProduct, removeProduct, deleteProduct, onShowCart, prdlajs } = cartSlice.actions;
+const { addProduct, removeProduct, deleteProduct, onShowCart } = cartSlice.actions;
 
-const cartCountSelector = (state: any) => {
-    return state.cart.reduce((total: number, product: Product) => total + product.quantity, 0);
+const cartCountSelector = (state: AppStateInterface): number => {
+    return state.cart.reduce((total: number, product: ProductInterface) => total + (product.quantity || 0), 0);
 };
 
-const cartValueSelector = (state: any) => {
+const cartValueSelector = (state: AppStateInterface): number => {
     return state.cart.reduce(
-        (total: number, product: Product) => total + product.price * product.quantity, 0
-    );
+        (total: number, product: ProductInterface) => total + product.price * (product.quantity || 0), 0);
 };
 
-const showCart = (state: any) => {
+const showCart = (state: AppStateInterface): boolean => {
     return state.showCart
 }
 
@@ -105,7 +89,6 @@ export {
     addProduct,
     removeProduct,
     deleteProduct,
-    prdlajs,
     onShowCart,
     cartCountSelector,
     cartValueSelector,

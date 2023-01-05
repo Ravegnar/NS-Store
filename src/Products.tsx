@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import {useState, useEffect} from "react";
+import {useLocation} from "react-router-dom";
+import {ProductInterface, AppStateInterface} from './type.d';
 import {useFetch} from "./useFetch";
 import {Loader} from "./Loader";
 import {Product} from "./Product";
 import {StoreNavigation} from "./StoreNavigation";
 import {Footer} from "./Footer";
 
-export const Products = (props: any) => {
-  const [products, setProducts] = useState<any>([]);
-  const [productData, setProductData] = useState([]);
+interface Props {
+  category: string
+  type: string
+}
+
+export const Products = (props: Props) => {
+  const [products, setProducts] = useState<ProductInterface[]>([]);
+  const [productData, setProductData] = useState<ProductInterface[]>([]);
   const [typeSortOut, setTypeSortOut] = useState("");
   const [categoryTitle, setCategoryTitle] = useState(props.category);
-  const [types, setTypes] = useState<any>(false);
+  const [types, setTypes] = useState<string[]>([]);
   const [sortNames, setSortNames] = useState(false);
   const [sortPrice, setSortPrice] = useState(false);
   const [showFiltering, setShowFiltering] = useState(false);
@@ -21,7 +27,7 @@ export const Products = (props: any) => {
   const [actualProducts, setActualProducts] = useState(0);
   const [firstPage, setFirstPage] = useState(true);
   const [lastPage, setLastPage] = useState(false);
-  const [pages, setPages] = useState<any>(false);
+  const [pages, setPages] = useState<number[]>([]);
   const { pathname } = useLocation();
   const { get, loading } = useFetch(
     "https://nco-store-default-rtdb.europe-west1.firebasedatabase.app/NC-Store/"
@@ -29,33 +35,32 @@ export const Products = (props: any) => {
 
   const sortIconRotate = sortNames || sortPrice ? "rotate-180" : "rotate-0"
 
-  let savedProducts: any = []
-  let savedRenders: any = []
-  let savedTypes: any = []
+  let savedProducts: ProductInterface[] = []
+  let savedRenders: string[] = []
 
   useEffect(() => {
       get(`NSW/${props.category}.json`).then((data: any) => {
         Object.keys(data).forEach(prod => {
           const type = data[prod].type
           savedProducts.push({...data[prod], render: true, position: savedProducts.length})
-          if (savedTypes.includes(type)) {
+          if (types.includes(type)) {
             return
           } else {
-            savedTypes.push(type)
+            types.push(type)
           }
         })
         
         setActualProducts(savedProducts.length)
         setProducts(savedProducts);
         setProductData(savedProducts);
-        setTypes(savedTypes);
+        setTypes(types);
         setProductPage(0)
         setTypeSortOut("")
         setSearchItem("")
       }).catch((error) => console.log("Could not load products", error));
   }, [pathname]);
 
-  let savepages: any = []
+  let savepages: number[] = []
 
   useEffect(() => {
     for (let index = 0; index < (actualProducts / 6); index++) {
@@ -64,7 +69,7 @@ export const Products = (props: any) => {
     setPages(savepages)
   }, [actualProducts, typeSortOut])
   
-  const handleProductPage = (status: string) => {
+  const handleProductPage = (status: string | number) => {
     if (typeof(status) === 'number') {setProductPage(status * 6)}
     else if (status === "previous") {setProductPage(productPage - 6)}
     else {setProductPage(productPage + 6)}
@@ -82,7 +87,7 @@ export const Products = (props: any) => {
     if (sortBy === "name") {
       setSortNames(!sortNames)
       setSortPrice(false)
-      products.sort((a: any, b: any) => {
+      products.sort((a: ProductInterface, b: ProductInterface) => {
         if (sortNames){
           if (a.name < b.name) return -1
           if (a.name > b.name) return 1
@@ -97,7 +102,7 @@ export const Products = (props: any) => {
     if (sortBy === "price") {
       setSortPrice(!sortPrice)
       setSortNames(false)
-      products.sort((a: any, b: any) => {
+      products.sort((a: ProductInterface, b: ProductInterface) => {
         if (sortPrice){
           if (a.price > b.price) return -1
           if (a.price < b.price) return 1
@@ -109,7 +114,7 @@ export const Products = (props: any) => {
         }
       })
     }
-    products.forEach((product: any) => {
+    products.forEach((product: ProductInterface) => {
       savedProducts.push({...product, position: savedProducts.length})
     })
     setShowSorting(false)
@@ -120,7 +125,7 @@ export const Products = (props: any) => {
     document.documentElement.scrollTo(0, 0);
   }, [productPage, pathname])
 
-  const handleTypeFilter = (e: any) => {
+  const handleTypeFilter = (e: React.MouseEvent) => {
     if (e.currentTarget.id === "") {
       setSearchItem("")
       setProducts(productData)
@@ -134,7 +139,7 @@ export const Products = (props: any) => {
   useEffect(() => {
 		const cleanedSearchItem = searchItem.toLowerCase().trim()
   //  setSearchSortOut(searchItem)
-    productData.forEach((product: any) => {
+    productData.forEach((product: ProductInterface) => {
       if (product.name.toLowerCase().includes(cleanedSearchItem)) {
         if (typeSortOut === "" || typeSortOut === product.type) {
           savedRenders.push("r")
@@ -167,7 +172,7 @@ export const Products = (props: any) => {
                   <button className="text-cyan-600 text-left truncate py-1 px-2 hover:bg-slate-800" id="" onClick={(e) => handleTypeFilter(e)}>
                     Reset filters
                   </button>
-                  {types && types.map((productType: any) => {
+                  {types && types.map((productType: string) => {
                     let productTypeText = productType + "s"
                     if (productType.endsWith("y")) {
                       productTypeText = productTypeText.slice(0, -2) + "ies"
@@ -213,8 +218,8 @@ export const Products = (props: any) => {
 
         <div className="grid grid-cols-1 gap-y-10 gap-x-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 mx-0 sm:mx-0 md:mx-0 lg:mx-12">
           {loading && <Loader />}
-          {products.map((product: any) => {
-            if (product.position < (productPage + 6) && product.position >= productPage) {
+          {products.length > 0 && products.map((product: ProductInterface) => {
+            if (product?.position < (productPage + 6) && product.position >= productPage) {
             return (
               <Product
                 type={props.type}
@@ -233,7 +238,7 @@ export const Products = (props: any) => {
             </svg>
           </button>
           )}
-          {pages && pages.map((page: any) => {
+          {pages.length > 0 && pages.map((page: number) => {
               if (page * 6 === productPage) {
                 return (
                   <button key={page} className="text-cyan-700 font-bold p-1 scale-150" onClick={() => handleProductPage(page)}>{(page + 1)}</button>
