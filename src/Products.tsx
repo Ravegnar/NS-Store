@@ -37,23 +37,24 @@ export const Products = (props: Props) => {
 
   let savedProducts: ProductInterface[] = []
   let savedRenders: string[] = []
+  let savedTypes: string[] = []
 
   useEffect(() => {
       get(`NSW/${props.category}.json`).then((data: any) => {
         Object.keys(data).forEach(prod => {
           const type = data[prod].type
           savedProducts.push({...data[prod], render: true, position: savedProducts.length})
-          if (types.includes(type)) {
+          if (savedTypes.includes(type)) {
             return
           } else {
-            types.push(type)
+            savedTypes.push(type)
           }
         })
         
         setActualProducts(savedProducts.length)
         setProducts(savedProducts);
         setProductData(savedProducts);
-        setTypes(types);
+        setTypes(savedTypes);
         setProductPage(0)
         setTypeSortOut("")
         setSearchItem("")

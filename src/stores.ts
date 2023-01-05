@@ -47,9 +47,10 @@ const cartSlice = createSlice({
         },
         deleteProduct: (state, action) => {
             const existingProduct: ProductInterface | undefined = state.cart.find(
-                (product: ProductInterface) => product.id === action.payload.id
+                (product: ProductInterface) => product.id === action.payload
                 );
             if (existingProduct?.quantity === 1) {
+            console.log(action.payload);
                 const index = state.cart.findIndex(
                     (product: ProductInterface) => product.id === action.payload
                 );
