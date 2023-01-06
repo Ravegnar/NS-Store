@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/NS-Store/static/css/main.e06f86b9.css",
-    "main.js": "/NS-Store/static/js/main.0032b2ab.js",
-    "static/media/NSO.mp4": "/NS-Store/static/media/NSO.ce97d10b8321a4a6c0f5.mp4",
+    "main.js": "/NS-Store/static/js/main.dc983fd5.js",
     "static/media/ME.gif": "/NS-Store/static/media/ME.c64b90abe685a6100416.gif",
     "static/media/HE.gif": "/NS-Store/static/media/HE.75f0974ad7ebd7506dd3.gif",
     "static/media/LA.gif": "/NS-Store/static/media/LA.00f412103f6c69446d04.gif",
     "static/media/EN.gif": "/NS-Store/static/media/EN.387d24c9badce3474df8.gif",
     "static/media/IN.gif": "/NS-Store/static/media/IN.43fda1a9f2de74d6e862.gif",
+    "static/media/NSO.mp4": "/NS-Store/static/media/NSO.323d28b6a65ac61cb437.mp4",
     "static/media/NS-tech4.jpg": "/NS-Store/static/media/NS-tech4.8d259c7813918a67b9d2.jpg",
     "static/media/Inda.jpg": "/NS-Store/static/media/Inda.eba6541d0b0df879cfae.jpg",
     "static/media/About1.jpg": "/NS-Store/static/media/About1.cf9daef7312cfc48f9a5.jpg",
@@ -38,10 +38,10 @@
     "static/media/AR-100.png": "/NS-Store/static/media/AR-100.c3d43924c0e5c2666e4d.png",
     "index.html": "/NS-Store/index.html",
     "main.e06f86b9.css.map": "/NS-Store/static/css/main.e06f86b9.css.map",
-    "main.0032b2ab.js.map": "/NS-Store/static/js/main.0032b2ab.js.map"
+    "main.dc983fd5.js.map": "/NS-Store/static/js/main.dc983fd5.js.map"
   },
   "entrypoints": [
     "static/css/main.e06f86b9.css",
-    "static/js/main.0032b2ab.js"
+    "static/js/main.dc983fd5.js"
   ]
 }
